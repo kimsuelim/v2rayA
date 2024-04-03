@@ -35,6 +35,8 @@ import (
 	configurev4 "github.com/v2rayA/v2rayA-lib4/db/configure"
 
 	servicev4 "github.com/v2rayA/v2rayA-lib4/server/service"
+
+	"github.com/v2rayA/v2rayA/cloud"
 )
 
 func checkEnvironment() {
@@ -233,6 +235,7 @@ func hello() {
 	log.Alert("Lite: %v", conf.GetEnvironmentConfig().Lite)
 	log.Alert("Version: %v", conf.Version)
 	log.Alert("UUID: %v", configure.GetUUID())
+	log.Alert("Network: %v", cloud.GetListOfIPv4Interfaces())
 	log.Alert("Starting...")
 }
 
