@@ -161,6 +161,20 @@ func initConfigure() {
 		} else {
 			initDBValue()
 		}
+	} else {
+		// Migration for previous installed versions which without uuid.
+		u := configure.GetUUID()
+		if u == "" {
+			uu := configure.GetUUIDNotNil()
+			log.Warn("database was initialized, but the UUID field does not exist.")
+			log.Warn("uuid: %v", uu)
+
+			err := configure.SetUUID(uu)
+			if err != nil {
+				log.Warn("%v", err)
+				return
+			}
+		}
 	}
 	//检查config.json是否存在
 	if _, err := os.Stat(asset.GetV2rayConfigPath()); err != nil {
@@ -218,6 +232,7 @@ func hello() {
 	log.Alert("Arch: %v", runtime.GOARCH)
 	log.Alert("Lite: %v", conf.GetEnvironmentConfig().Lite)
 	log.Alert("Version: %v", conf.Version)
+	log.Alert("UUID: %v", configure.GetUUID())
 	log.Alert("Starting...")
 }
 

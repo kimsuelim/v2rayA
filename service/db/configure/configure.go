@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"encoding/hex"
 	"fmt"
+	"github.com/google/uuid"
 	jsoniter "github.com/json-iterator/go"
 	"github.com/tidwall/gjson"
 	"github.com/v2rayA/v2rayA/common"
@@ -24,6 +25,7 @@ type Configure struct {
 	InternalDnsList  *string            `json:"internalDnsList"`
 	ExternalDnsList  *string            `json:"externalDnsList"`
 	RoutingA         *string            `json:"routingA"`
+	UUID             string             `json:"uuid"`
 }
 
 func New() *Configure {
@@ -43,6 +45,7 @@ func New() *Configure {
 		InternalDnsList: nil,
 		ExternalDnsList: nil,
 		RoutingA:        nil,
+		UUID:            uuid.NewString(),
 	}
 }
 func decode(b []byte) (result []byte) {
@@ -105,6 +108,9 @@ func SetConfigure(cfg *Configure) error {
 	if err := SetPorts(&cfg.Ports); err != nil {
 		return err
 	}
+	if err := SetUUID(cfg.UUID); err != nil {
+		return err
+	}
 	return nil
 }
 
@@ -141,6 +147,9 @@ func SetExternalDnsList(dnsList *string) (err error) {
 }
 func SetRoutingA(routingA *string) (err error) {
 	return db.Set("system", "routingA", routingA)
+}
+func SetUUID(uuid string) (err error) {
+	return db.Set("system", "uuid", uuid)
 }
 
 func AppendServers(server []*ServerRaw) (err error) {
@@ -226,6 +235,17 @@ func GetPortsNotNil() *Ports {
 		p.Vmess = 0
 	}
 	return p
+}
+func GetUUID() (u string) {
+	_ = db.Get("system", "uuid", &u)
+	return
+}
+func GetUUIDNotNil() (u string) {
+	_ = db.Get("system", "uuid", &u)
+	if u == "" {
+		return uuid.NewString()
+	}
+	return
 }
 func GetExternalDnsListNotNil() (list []string) {
 	r := new(string)
