@@ -2,7 +2,9 @@ version: "3"
 services:
   v2raya:
     privileged: true
-    network_mode: host # --network host
+    #network_mode: host # --network host
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     build:
       context: .
       dockerfile: Dockerfile.dev
@@ -10,3 +12,6 @@ services:
       - ./service:/service:ro
       - /lib/modules:/lib/modules:ro
       - /etc/resolv.conf:/etc/resolv.conf
+    ports:
+      - 2017:2017
+      - 20170-20172:20170-20172

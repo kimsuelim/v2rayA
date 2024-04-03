@@ -10,6 +10,15 @@ Thanks to the advantages of Web GUI, you can not only use it on your local compu
 
 Project：https://github.com/v2rayA/v2rayA
 
+## Setting Up a Development Environment
+
+Generates a Web GUI application
+
+    $ ./build.sh
+
+then build the Docker container, developing in docker environment
+
+    $ docker-compose -f docker-compose.dev.yml up --build
 
 ## Usage
 
