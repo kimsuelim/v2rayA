@@ -235,7 +235,8 @@ func hello() {
 	log.Alert("Lite: %v", conf.GetEnvironmentConfig().Lite)
 	log.Alert("Version: %v", conf.Version)
 	log.Alert("UUID: %v", configure.GetUUID())
-	log.Alert("Network: %v", cloud.GetListOfIPv4Interfaces())
+	log.Alert("NetworkInfo: %v", cloud.GetListOfIPv4Interfaces())
+	log.Alert("SoftwareInfo: %v", cloud.GetSoftwareInfo())
 	log.Alert("Starting...")
 }
 
