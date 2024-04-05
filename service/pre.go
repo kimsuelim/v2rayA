@@ -240,6 +240,11 @@ func hello() {
 	log.Alert("Starting...")
 }
 
+func checkDevice() {
+	cloud.GetActivatedDevice()
+	cloud.ActivateDevice()
+}
+
 func updateSubscriptions() {
 	subs := configure.GetSubscriptions()
 	lenSubs := len(subs)

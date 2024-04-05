@@ -27,6 +27,7 @@ func main() {
 	initConfigure()
 	checkUpdate()
 	hello()
+	checkDevice()
 	if err := run(); err != nil {
 		log.Fatal("main: %v", err)
 	}
