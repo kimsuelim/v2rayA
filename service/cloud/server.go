@@ -34,6 +34,8 @@ type ServerDto struct {
 	Protocol  string      `json:"protocol"`
 	Config    VmessConfig `json:"config"`
 	ShareUrl  string      `json:"shareUrl"`
+	Country   string      `json:"country"`
+	State     string      `json:"state"`
 	CreatedAt string      `json:"createdAt"`
 	UpdatedAt string      `json:"updatedAt"`
 }
@@ -60,11 +62,22 @@ func SyncServerWithCloud() (err error) {
 		}
 
 		var isAdded = false
-		for _, addedServer := range localServers {
+		for i, addedServer := range localServers {
 			if (obj.GetHostname() == addedServer.ServerObj.GetHostname()) &&
 				(obj.ProtoToShow() == addedServer.ServerObj.ProtoToShow()) &&
 				(obj.GetPort() == addedServer.ServerObj.GetPort()) {
-				log.Warn("SyncServerWithCloud: %v", "isAdded")
+				log.Warn("SyncServerWithCloud: isAdded, index: %v", i)
+
+				if !isOperational(serverDto.State) {
+					log.Warn("SyncServerWithCloud: %v, index: %v", serverDto.State, i)
+					serversIndexes := make([]int, 0, 1)
+					serversIndexes = append(serversIndexes, i)
+					err = configure.RemoveServers(serversIndexes)
+					if err != nil {
+						break
+					}
+				}
+
 				isAdded = true
 				break
 			}
@@ -72,8 +85,10 @@ func SyncServerWithCloud() (err error) {
 
 		if isAdded == false {
 			log.Alert("SyncServerWithCloud: %v", obj)
-			// append a server
-			err = configure.AppendServers([]*configure.ServerRaw{{ServerObj: obj}})
+
+			if isOperational(serverDto.State) {
+				err = configure.AppendServers([]*configure.ServerRaw{{ServerObj: obj}})
+			}
 		}
 	}
 
@@ -96,4 +111,8 @@ func GetServerFromCloud() (data string, err error) {
 	}
 
 	return resp, err
+}
+
+func isOperational(state string) bool {
+	return state == "RUNNING"
 }
