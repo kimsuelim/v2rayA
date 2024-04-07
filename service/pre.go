@@ -245,6 +245,10 @@ func checkDevice() {
 	cloud.ActivateDevice()
 }
 
+func checkServer() {
+	cloud.SyncServerWithCloud()
+}
+
 func updateSubscriptions() {
 	subs := configure.GetSubscriptions()
 	lenSubs := len(subs)

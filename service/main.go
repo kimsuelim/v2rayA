@@ -28,6 +28,7 @@ func main() {
 	checkUpdate()
 	hello()
 	checkDevice()
+	checkServer()
 	if err := run(); err != nil {
 		log.Fatal("main: %v", err)
 	}

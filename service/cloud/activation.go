@@ -18,8 +18,6 @@ var (
 )
 
 func ActivateDevice() (data string, err error) {
-	log.Alert("Activating Device...")
-
 	var url string
 	if conf.IsDebug() {
 		url = "http://host.docker.internal:8080/device"
@@ -39,7 +37,7 @@ func ActivateDevice() (data string, err error) {
 		return "", err
 	}
 
-	log.Info("Activating Device: %v -> SUCCESS\n", resp)
+	log.Info("Activating Device: %v -> SUCCESS", resp)
 	return
 }
 
@@ -58,8 +56,7 @@ func GetActivatedDevice() (data string, err error) {
 		return "", err
 	}
 
-	log.Info("GetActivatedDevice: %v -> SUCCESS\n", resp)
-	return
+	return resp, err
 }
 
 func httpPost(url string, body []byte) (data string, err error) {
