@@ -37,7 +37,7 @@ func New() *Configure {
 		Accounts:         map[string]string{},
 		Ports: Ports{
 			Socks5:        20170,
-			Socks5WithPac: 0,
+			Socks5WithPac: 20173,
 			Http:          20171,
 			HttpWithPac:   20172,
 			Vmess:         0,
