@@ -1423,7 +1423,8 @@ func (t *Template) SetAPI(serverData *ServerData) (port int, err error) {
 				Tag:      outbound,
 				Selector: selector,
 				Strategy: coreObj.BalancerStrategy{
-					Type: strategy.String(),
+					//Type: strategy.String(), // type hardcoded as leastping
+					Type: "random", // change hardcoded type to random
 					Settings: &coreObj.StrategySettings{
 						ObserverTag: outbound,
 					},
