@@ -6,7 +6,6 @@ import (
 	"errors"
 	"fmt"
 	"github.com/v2rayA/v2rayA/common/httpClient"
-	"github.com/v2rayA/v2rayA/conf"
 	"github.com/v2rayA/v2rayA/db/configure"
 	"github.com/v2rayA/v2rayA/pkg/util/log"
 	"io"
@@ -18,13 +17,7 @@ var (
 )
 
 func ActivateDevice() (data string, err error) {
-	var url string
-	if conf.IsDebug() {
-		url = "http://host.docker.internal:8080/device"
-	} else {
-		url = "https://api.imcvpn.com/device"
-	}
-
+	var url = GetApiHost() + "/device"
 	reqBody, err := json.Marshal(GetDeviceInfo())
 	if err != nil {
 		panic(err)
@@ -42,13 +35,7 @@ func ActivateDevice() (data string, err error) {
 }
 
 func GetActivatedDevice() (data string, err error) {
-	var url string
-	if conf.IsDebug() {
-		url = "http://host.docker.internal:8080/device/" + configure.GetUUID()
-	} else {
-		url = "https://api.imcvpn.com/device" + configure.GetUUID()
-	}
-
+	var url = GetApiHost() + "/device/" + configure.GetUUID()
 	resp, err := httpGet(url)
 	if err != nil {
 		err = fmt.Errorf("%w: %v", FailGet, err)
