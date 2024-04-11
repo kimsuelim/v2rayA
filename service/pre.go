@@ -245,8 +245,27 @@ func checkDevice() {
 	cloud.ActivateDevice()
 }
 
-func checkServer() {
-	cloud.SyncServerWithCloud()
+func updateServers() {
+	// Init ticker(scheduler), Every 1 minute sync with cloud
+	var TickerUpdateServerList = time.NewTicker(cloud.TickDuration())
+	go func() {
+		for range TickerUpdateServerList.C {
+			err := cloud.SyncServerWithCloud()
+			if err != nil {
+				log.Info("[AutoUpdate] ServerList: %v", err)
+			}
+		}
+	}()
+
+	// When service start
+	go func() {
+		err := cloud.SyncServerWithCloud()
+		if err != nil {
+			log.Info("[updateServers] ServerList: %v", err)
+			return
+		}
+		log.Info("Complete updating server list. Localtime: %v", "")
+	}()
 }
 
 func updateSubscriptions() {

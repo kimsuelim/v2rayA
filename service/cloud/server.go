@@ -45,12 +45,12 @@ func SyncServerWithCloud() (err error) {
 
 	resp, err := GetServerFromCloud()
 	if err != nil {
-		panic(err)
+		return
 	}
 
 	err = json.Unmarshal([]byte(resp), &cloudServers)
 	if err != nil {
-		panic(err)
+		return
 	}
 
 	for _, serverDto := range cloudServers {
@@ -65,16 +65,16 @@ func SyncServerWithCloud() (err error) {
 			if (obj.GetHostname() == addedServer.ServerObj.GetHostname()) &&
 				(obj.ProtoToShow() == addedServer.ServerObj.ProtoToShow()) &&
 				(obj.GetPort() == addedServer.ServerObj.GetPort()) {
-				log.Warn("SyncServerWithCloud: isAdded, index: %v", i)
+				//log.Info("SyncServerWithCloud: isAdded, index: %v", i)
 
 				if !isOperational(serverDto.State) {
-					log.Warn("SyncServerWithCloud: %v, index: %v", serverDto.State, i)
 					serversIndexes := make([]int, 0, 1)
 					serversIndexes = append(serversIndexes, i)
 					err = configure.RemoveServers(serversIndexes)
 					if err != nil {
 						break
 					}
+					log.Info("SyncServerWithCloud: RemoveServers: %v, index: %v", serverDto.State, i)
 				}
 
 				isAdded = true
@@ -83,10 +83,12 @@ func SyncServerWithCloud() (err error) {
 		}
 
 		if isAdded == false {
-			log.Alert("SyncServerWithCloud: %v", obj)
-
 			if isOperational(serverDto.State) {
 				err = configure.AppendServers([]*configure.ServerRaw{{ServerObj: obj}})
+				if err != nil {
+					continue
+				}
+				log.Info("SyncServerWithCloud: AppendServers: %v", obj)
 			}
 		}
 	}
@@ -99,7 +101,6 @@ func GetServerFromCloud() (data string, err error) {
 	resp, err := httpGet(url)
 	if err != nil {
 		err = fmt.Errorf("%w: %v", FailGet, err)
-		log.Warn("GetServerFromCloud: %v", err)
 		return "", err
 	}
 

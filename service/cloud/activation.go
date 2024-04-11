@@ -11,11 +11,6 @@ import (
 	"io"
 )
 
-var (
-	FailCreate = fmt.Errorf("failed to create device")
-	FailGet    = fmt.Errorf("failed to get device")
-)
-
 func ActivateDevice() (data string, err error) {
 	var url = GetApiHost() + "/device"
 	reqBody, err := json.Marshal(GetDeviceInfo())
