@@ -29,7 +29,7 @@ func GetApiHost() string {
 	if conf.IsDebug() {
 		url = "http://host.docker.internal:8080"
 	} else {
-		url = "https://imc-api.mooo.com"
+		url = "https://imc-api.ignorelist.com"
 	}
 
 	return url
