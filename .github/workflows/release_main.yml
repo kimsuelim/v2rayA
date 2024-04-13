@@ -146,6 +146,9 @@ jobs:
         sudo apt-get update -y && sudo apt-get install -y gzip
     - name: Build v2rayA Binaries
       id: build
+      env:
+        USERNAME: ${{ secrets.HTTP_BASIC_AUTH_USER }}
+        PASSWORD: ${{ secrets.HTTP_BASIC_AUTH_PASSWORD }}
       run: |
         for file in $(find service/server/router/web |grep -v png |grep -v index.html|grep -v .gz); do
           if [ ! -d $file ];then
@@ -153,7 +156,7 @@ jobs:
           fi
         done
         cd service
-        go build -ldflags="-X github.com/v2rayA/v2rayA/conf.Version=$VERSION -s -w" -o ../build_"$GOOS"_"$GOARCH""$GOARM"_"$VERSION""$WIN_SUF"
+        go build -ldflags="-X github.com/v2rayA/v2rayA/conf.Version=$VERSION -X github.com/v2rayA/v2rayA/conf.BasicAuthUsername=$USERNAME -X github.com/v2rayA/v2rayA/conf.BasicAuthPassword=$PASSWORD -s -w" -o ../build_"$GOOS"_"$GOARCH""$GOARM"_"$VERSION""$WIN_SUF"
         cd ..
         mv build_"$GOOS"_"$GOARCH""$GOARM"_"$VERSION""$WIN_SUF" v2raya_"${{ steps.get_filename.outputs.BUILD_NAME }}"_"$VERSION""$WIN_SUF"
     - name: Upload Artifact

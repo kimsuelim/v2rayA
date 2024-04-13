@@ -5,6 +5,8 @@ import (
 )
 
 var (
+	BasicAuthUsername        = "my_username"
+	BasicAuthPassword        = "my_password"
 	Version                  = "debug"
 	FoundNew                 = false
 	RemoteVersion            = ""
