@@ -19,6 +19,6 @@ func GetSoftwareInfo() SoftwareInfo {
 		GoVersion: runtime.Version(),
 		SwVersion: conf.Version,
 	}
-	
+
 	return sw
 }

@@ -11,6 +11,8 @@ import (
 	"sync"
 	"time"
 
+	"github.com/getsentry/sentry-go"
+	"github.com/v2rayA/v2rayA/cloud/utils"
 	"github.com/v2rayA/v2rayA/common/httpClient"
 	"github.com/v2rayA/v2rayA/common/resolv"
 	"github.com/v2rayA/v2rayA/core/coreObj"
@@ -283,9 +285,25 @@ func httpLatency(which *configure.Which, port string, timeout time.Duration, cus
 			default:
 				which.Latency = err.Error()
 			}
+
+			// Attach context again. It may have changed since booting.
+			utils.AttachCustomContextToSentryEvent()
+
+			s, _ := which.LocateServerRaw()
+			sentry.ConfigureScope(func(scope *sentry.Scope) {
+				scope.SetContext(fmt.Sprintf("Which Server"), map[string]interface{}{
+					"hostname": s.ServerObj.GetHostname(),
+					"proto":    s.ServerObj.ProtoToShow(),
+					"port":     s.ServerObj.GetPort(),
+					"url":      s.ServerObj.ExportToURL(),
+				})
+			})
+			sentry.CaptureException(err)
+			log.Info("httpLatency: error: %v, server: %v", which.Latency, s.ServerObj)
 		} else {
 			which.Latency = "BAD RESPONSE"
 		}
+
 		return
 	}
 	_ = resp.Body.Close()

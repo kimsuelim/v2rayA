@@ -12,10 +12,13 @@ require (
 	github.com/beevik/ntp v0.3.0
 	github.com/devfeel/mapper v0.7.5
 	github.com/dgrijalva/jwt-go/v4 v4.0.0-preview1
+	github.com/elastic/go-sysinfo v1.13.1
+	github.com/getsentry/sentry-go v0.27.0
 	github.com/gin-contrib/cors v1.3.1
 	github.com/gin-gonic/gin v1.9.1
 	github.com/golang/protobuf v1.5.3
 	github.com/google/gopacket v1.1.19
+	github.com/google/uuid v1.3.0
 	github.com/gorilla/websocket v1.5.0
 	github.com/json-iterator/go v1.1.12
 	github.com/matoous/go-nanoid v1.5.0
@@ -48,7 +51,6 @@ require (
 	github.com/dgryski/go-rc2 v0.0.0-20150621095337-8a9021637152 // indirect
 	github.com/djherbis/times v1.5.0 // indirect
 	github.com/eknkc/basex v1.0.1 // indirect
-	github.com/elastic/go-sysinfo v1.13.1 // indirect
 	github.com/elastic/go-windows v1.0.0 // indirect
 	github.com/gabriel-vasile/mimetype v1.4.2 // indirect
 	github.com/gin-contrib/sse v0.1.0 // indirect
@@ -61,7 +63,6 @@ require (
 	github.com/goccy/go-json v0.10.2 // indirect
 	github.com/golang/mock v1.6.0 // indirect
 	github.com/google/pprof v0.0.0-20230705174524-200ffdc848b8 // indirect
-	github.com/google/uuid v1.3.0 // indirect
 	github.com/joeshaw/multierror v0.0.0-20140124173710-69b34d4ec901 // indirect
 	github.com/klauspost/cpuid/v2 v2.2.5 // indirect
 	github.com/leodido/go-urn v1.2.4 // indirect

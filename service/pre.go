@@ -11,6 +11,7 @@ import (
 	"syscall"
 	"time"
 
+	"github.com/getsentry/sentry-go"
 	"github.com/gin-gonic/gin"
 	jsonIteratorExtra "github.com/json-iterator/go/extra"
 	"github.com/v2rayA/v2rayA/common/netTools/ports"
@@ -37,7 +38,30 @@ import (
 	servicev4 "github.com/v2rayA/v2rayA-lib4/server/service"
 
 	"github.com/v2rayA/v2rayA/cloud"
+	"github.com/v2rayA/v2rayA/cloud/utils"
 )
+
+func initSentry() {
+	utils.AttachCustomContextToSentryEvent()
+
+	var rate float64
+	if conf.IsDebug() {
+		rate = 1.0
+	} else {
+		rate = 0.25
+	}
+	err := sentry.Init(sentry.ClientOptions{
+		Dsn:              conf.SentryDSN,
+		TracesSampleRate: rate,
+		SampleRate:       rate,
+	})
+	if err != nil {
+		log.Fatal("sentry.Init: %s", err)
+	}
+
+	// Flush buffered events before the program terminates.
+	defer sentry.Flush(2 * time.Second)
+}
 
 func checkEnvironment() {
 	config := conf.GetEnvironmentConfig()
