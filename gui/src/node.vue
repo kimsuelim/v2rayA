@@ -190,105 +190,6 @@
         class="main-tabs"
         @input="handleTabsChange"
       >
-        <b-tab-item label="SUBSCRIPTION">
-          <b-field :label="`SUBSCRIPTION(${tableData.subscriptions.length})`">
-            <b-table
-              :data="tableData.subscriptions"
-              :checked-rows.sync="checkedRows"
-              :row-class="
-                (row, index) =>
-                  row.connected &&
-                  runningState.running === $t('common.isRunning')
-                    ? 'is-connected-running'
-                    : row.connected
-                    ? 'is-connected-not-running'
-                    : null
-              "
-              default-sort="id"
-              checkable
-            >
-              <b-table-column
-                v-slot="props"
-                field="id"
-                label="ID"
-                numeric
-                sortable
-              >
-                {{ props.row.id }}
-              </b-table-column>
-              <b-table-column
-                v-slot="props"
-                field="host"
-                :label="$t('subscription.host')"
-                sortable
-              >
-                {{ props.row.host }}
-              </b-table-column>
-              <b-table-column
-                v-slot="props"
-                field="remarks"
-                :label="$t('subscription.remarks')"
-                sortable
-              >
-                {{ props.row.remarks }}
-              </b-table-column>
-              <b-table-column
-                v-slot="props"
-                field="status"
-                :label="$t('subscription.timeLastUpdate')"
-                width="260"
-                sortable
-              >
-                {{ props.row.status }}
-              </b-table-column>
-              <b-table-column
-                v-slot="props"
-                :label="$t('subscription.numberServers')"
-                centered
-                numeric
-                sortable
-                :custom-sort="sortNumberServers"
-              >
-                {{ props.row.servers.length }}
-              </b-table-column>
-              <b-table-column
-                v-slot="props"
-                :label="$t('operations.name')"
-                width="300"
-              >
-                <div class="operate-box">
-                  <b-button
-                    size="is-small"
-                    icon-left=" github-circle iconfont icon-sync"
-                    outlined
-                    type="is-warning"
-                    @click="handleClickUpdateSubscription(props.row)"
-                  >
-                    {{ $t("operations.update") }}
-                  </b-button>
-                  <b-button
-                    size="is-small"
-                    icon-left=" github-circle iconfont icon-wendangxiugai"
-                    outlined
-                    type="is-info"
-                    @click="handleClickModifySubscription(props.row)"
-                  >
-                    {{ $t("operations.modify") }}
-                  </b-button>
-                  <b-button
-                    size="is-small"
-                    icon-left=" github-circle iconfont icon-share"
-                    outlined
-                    type="is-success"
-                    @click="handleClickShare(props.row)"
-                  >
-                    {{ $t("operations.share") }}
-                  </b-button>
-                </div>
-              </b-table-column>
-            </b-table>
-          </b-field>
-        </b-tab-item>
         <b-tab-item
           label="SERVER"
           :icon="`${
@@ -404,15 +305,6 @@
                     @click="handleClickModifyServer(props.row)"
                   >
                     {{ $t("operations.modify") }}
-                  </b-button>
-                  <b-button
-                    size="is-small"
-                    icon-left=" github-circle iconfont icon-share"
-                    :outlined="!props.row.connected"
-                    type="is-success"
-                    @click="handleClickShare(props.row)"
-                  >
-                    {{ $t("operations.share") }}
                   </b-button>
                 </div>
               </b-table-column>

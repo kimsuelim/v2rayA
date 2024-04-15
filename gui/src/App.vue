@@ -20,52 +20,6 @@
             >{{ coverStatusText ? coverStatusText : runningState.running }}
           </b-tag>
         </b-navbar-item>
-        <b-navbar-item tag="div">
-          <b-dropdown
-            v-if="updateOutboundDropdown"
-            :triggers="isMobile ? ['click'] : ['click', 'hover']"
-            aria-role="list"
-            :close-on-click="false"
-            @mouseenter.native="handleOutboundDropdownActiveChange"
-            @active-change="handleOutboundDropdownActiveChange"
-          >
-            <template #trigger>
-              <b-tag class="pointerTag" type="is-info" icon-right="menu-down"
-                >{{ outboundName.toUpperCase() }}
-              </b-tag>
-            </template>
-
-            <b-dropdown-item
-              v-for="outbound in outbounds"
-              :key="outbound"
-              aria-role="listitem"
-              class="is-flex padding-right-1rem justify-content-space-between outbound-dropdown"
-              @mouseenter.native="handleOnOutboundMouseEnter(outbound)"
-              @mouseleave.native="handleOnOutboundMouseLeave"
-              @click="outboundName = outbound"
-              ><p class="is-relative is-fullwidth">
-                <span>{{ outboundNameDecorator(outbound) }}</span>
-                <span>
-                  <i
-                    v-show="isMobile || outboundDropdownHover[outbound]"
-                    class="iconfont icon-setting outbound-setting"
-                    @click="handleClickOutboundSetting($event, outbound)"
-                  ></i
-                ></span></p
-            ></b-dropdown-item>
-            <b-dropdown-item
-              aria-role="listitem"
-              class="is-flex padding-right-1rem"
-              separator
-            ></b-dropdown-item>
-            <b-dropdown-item
-              aria-role="listitem"
-              class="is-flex padding-right-1rem"
-              @click="handleAddOutbound"
-              >{{ $t("operations.addOutbound") }}
-            </b-dropdown-item>
-          </b-dropdown>
-        </b-navbar-item>
       </template>
       <template slot="start"></template>
 
