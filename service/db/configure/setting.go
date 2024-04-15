@@ -26,20 +26,20 @@ type Setting struct {
 
 func NewSetting() (setting *Setting) {
 	return &Setting{
-		RulePortMode:                       WhitelistMode,
+		RulePortMode:                       GfwlistMode,
 		ProxyModeWhenSubscribe:             ProxyModeDirect,
-		GFWListAutoUpdateMode:              NotAutoUpdate,
-		GFWListAutoUpdateIntervalHour:      0,
+		GFWListAutoUpdateMode:              AutoUpdateAtIntervals,
+		GFWListAutoUpdateIntervalHour:      12,
 		SubscriptionAutoUpdateMode:         NotAutoUpdate,
 		SubscriptionAutoUpdateIntervalHour: 0,
 		TcpFastOpen:                        Default,
 		MuxOn:                              No,
 		Mux:                                8,
-		Transparent:                        TransparentClose,
+		Transparent:                        TransparentGfwlist,
 		IpForward:                          ipforward.IsIpForwardOn(),
 		PortSharing:                        false,
 		SpecialMode:                        SpecialModeNone,
-		TransparentType:                    TransparentRedirect,
+		TransparentType:                    TransparentSystemProxy,
 		AntiPollution:                      AntipollutionClosed,
 	}
 }
@@ -55,7 +55,7 @@ type CustomPac struct {
 	RoutingRules     []RoutingRule           `json:"routingRules"`
 }
 
-//v2rayTmpl.RoutingRule的前端友好版本
+// v2rayTmpl.RoutingRule的前端友好版本
 type RoutingRule struct {
 	Filename  string       `json:"filename"`  //SiteDAT文件名
 	Tags      []string     `json:"tags"`      //SiteDAT文件的标签
