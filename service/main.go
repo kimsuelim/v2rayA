@@ -19,7 +19,6 @@ import (
 )
 
 func main() {
-	initSentry()
 	gin.SetMode(gin.ReleaseMode)
 	checkEnvironment()
 	if runtime.GOOS == "linux" {
@@ -27,6 +26,7 @@ func main() {
 	}
 	initConfigure()
 	checkUpdate()
+	initSentry() // order of initialization is matter
 	hello()
 	checkDevice()
 	updateServers()
