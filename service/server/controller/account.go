@@ -27,11 +27,20 @@ func PostLogin(ctx *gin.Context) {
 		common.ResponseError(ctx, logError("bad request"))
 		return
 	}
-	// TODO: if error occurs fallback to system default?
-	jwt, err := cloud.Login(data.Username, data.Password)
-	//jwt, err := service.Login(data.Username, data.Password)
+
+	// Authenticate local admin first, then on the server-side.
+	jwt, err := service.Login(data.Username, data.Password)
 	if err != nil {
-		common.ResponseError(ctx, logError(err))
+		jwt, err := cloud.Login(data.Username, data.Password)
+		if err != nil {
+			common.ResponseError(ctx, logError(err))
+			return
+		}
+
+		common.ResponseSuccess(ctx, gin.H{
+			"token": jwt,
+		})
+
 		return
 	}
 	common.ResponseSuccess(ctx, gin.H{
