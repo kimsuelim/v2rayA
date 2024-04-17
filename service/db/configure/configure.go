@@ -34,7 +34,9 @@ func New() *Configure {
 		Subscriptions:    make([]*SubscriptionRaw, 0),
 		ConnectedServers: make([]*Which, 0),
 		Setting:          NewSetting(),
-		Accounts:         map[string]string{},
+		Accounts: map[string]string{
+			"admin": "admin",
+		},
 		Ports: Ports{
 			Socks5:        20170,
 			Socks5WithPac: 20173,
@@ -80,7 +82,7 @@ func SetConfigure(cfg *Configure) error {
 		return err
 	}
 	for username, password := range cfg.Accounts {
-		if err := SetAccount(username, password); err != nil {
+		if err := SetAccount(username, common.CryptoPwd(password)); err != nil {
 			return err
 		}
 	}

@@ -132,6 +132,8 @@ func initConfigure() {
 	//db
 	dbPath := filepath.Join(conf.GetEnvironmentConfig().Config, "bolt.db")
 	if _, e := os.Lstat(dbPath); os.IsNotExist(e) {
+		log.Info("initConfigure: bolt.db: IsNotExist")
+
 		//confv4.SetConfig(confv4.Params{Config: conf.GetEnvironmentConfig().Config})
 		// need to migrate?
 		if !configurev4.IsConfigureNotExists() {
