@@ -2,6 +2,7 @@ package controller
 
 import (
 	"github.com/gin-gonic/gin"
+	"github.com/v2rayA/v2rayA/cloud"
 	"github.com/v2rayA/v2rayA/common"
 	"github.com/v2rayA/v2rayA/db/configure"
 	"github.com/v2rayA/v2rayA/server/service"
@@ -26,7 +27,9 @@ func PostLogin(ctx *gin.Context) {
 		common.ResponseError(ctx, logError("bad request"))
 		return
 	}
-	jwt, err := service.Login(data.Username, data.Password)
+	// TODO: if error occurs fallback to system default?
+	jwt, err := cloud.Login(data.Username, data.Password)
+	//jwt, err := service.Login(data.Username, data.Password)
 	if err != nil {
 		common.ResponseError(ctx, logError(err))
 		return
