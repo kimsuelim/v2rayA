@@ -190,12 +190,6 @@
         class="main-tabs"
         @input="handleTabsChange"
       >
-        <b-tab-item
-          label="SERVER"
-          :icon="`${
-            connectedServerInTab['server'] ? ' iconfont icon-dian' : ''
-          }`"
-        >
           <b-field :label="`SERVER(${tableData.servers.length})`">
             <b-table
               per-page="100"
