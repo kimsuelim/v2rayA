@@ -13,6 +13,7 @@
         <b-input
           ref="username"
           v-model="username"
+          type="email"
           @keyup.enter.native="handleEnter"
         ></b-input>
       </b-field>

@@ -99,7 +99,7 @@ export default {
   },
   login: {
     title: "Login",
-    username: "Username",
+    username: "Username or email address",
     password: "Password",
   },
   setting: {

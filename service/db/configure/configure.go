@@ -35,7 +35,7 @@ func New() *Configure {
 		ConnectedServers: make([]*Which, 0),
 		Setting:          NewSetting(),
 		Accounts: map[string]string{
-			"admin": "admin",
+			"admin@admin": "admin",
 		},
 		Ports: Ports{
 			Socks5:        20170,

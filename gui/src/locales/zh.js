@@ -99,7 +99,7 @@ export default {
   },
   login: {
     title: "登录",
-    username: "用户名",
+    username: "用户名/邮箱",
     password: "密码",
   },
   setting: {
