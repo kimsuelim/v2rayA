@@ -24,13 +24,5 @@ func TickDuration() time.Duration {
 }
 
 func GetApiHost() string {
-	var url string
-
-	if conf.IsDebug() {
-		url = "http://host.docker.internal:8080"
-	} else {
-		url = "https://imc-api.ignorelist.com"
-	}
-
-	return url
+	return conf.ApiHost
 }
