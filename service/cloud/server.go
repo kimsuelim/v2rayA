@@ -97,7 +97,7 @@ func SyncServerWithCloud() (err error) {
 }
 
 func GetServerFromCloud() (data string, err error) {
-	var url = GetApiHost() + "/server"
+	var url = GetApiHost() + "/servers"
 	resp, err := httpGet(url)
 	if err != nil {
 		err = fmt.Errorf("%w: %v", FailGet, err)

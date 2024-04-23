@@ -14,7 +14,7 @@ import (
 )
 
 func ActivateDevice() (data string, err error) {
-	var url = GetApiHost() + "/device"
+	var url = GetApiHost() + "/devices"
 	reqBody, err := json.Marshal(GetDeviceInfo())
 	if err != nil {
 		panic(err)
@@ -32,7 +32,7 @@ func ActivateDevice() (data string, err error) {
 }
 
 func GetActivatedDevice() (data string, err error) {
-	var url = GetApiHost() + "/device/" + configure.GetUUID()
+	var url = GetApiHost() + "/devices/" + configure.GetUUID()
 	resp, err := httpGet(url)
 	if err != nil {
 		err = fmt.Errorf("%w: %v", FailGet, err)
