@@ -8,6 +8,7 @@ import (
 	jsoniter "github.com/json-iterator/go"
 	"github.com/tidwall/gjson"
 	"github.com/v2rayA/v2rayA/common"
+	"github.com/v2rayA/v2rayA/conf"
 	"github.com/v2rayA/v2rayA/db"
 	"github.com/v2rayA/v2rayA/pkg/util/log"
 	"sort"
@@ -35,7 +36,7 @@ func New() *Configure {
 		ConnectedServers: make([]*Which, 0),
 		Setting:          NewSetting(),
 		Accounts: map[string]string{
-			"admin@admin": "admin",
+			conf.AdminUsername: conf.AdminPassword,
 		},
 		Ports: Ports{
 			Socks5:        20170,
