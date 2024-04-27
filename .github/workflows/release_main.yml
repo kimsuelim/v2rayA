@@ -159,7 +159,7 @@ jobs:
           fi
         done
         cd service
-        go build -ldflags="-X github.com/v2rayA/v2rayA/conf.Version=$VERSION -X github.com/v2rayA/v2rayA/conf.BasicAuthUsername=$USERNAME -X github.com/v2rayA/v2rayA/conf.BasicAuthPassword=$PASSWORD -X github.com/v2rayA/v2rayA/conf.ApiHost=$URL -X github.com/v2rayA/v2rayA/conf.ADMIN_USERNAME=$ADMIN_USERNAME -X github.com/v2rayA/v2rayA/conf.ADMIN_PASSWORD=$ADMIN_PASSWORD -s -w" -o ../build_"$GOOS"_"$GOARCH""$GOARM"_"$VERSION""$WIN_SUF"
+        go build -ldflags="-X github.com/v2rayA/v2rayA/conf.Version=$VERSION -X github.com/v2rayA/v2rayA/conf.BasicAuthUsername=$USERNAME -X github.com/v2rayA/v2rayA/conf.BasicAuthPassword=$PASSWORD -X github.com/v2rayA/v2rayA/conf.ApiHost=$URL -X github.com/v2rayA/v2rayA/conf.AdminUsername=$ADMIN_USERNAME -X github.com/v2rayA/v2rayA/conf.AdminPassword=$ADMIN_PASSWORD -s -w" -o ../build_"$GOOS"_"$GOARCH""$GOARM"_"$VERSION""$WIN_SUF"
         cd ..
         mv build_"$GOOS"_"$GOARCH""$GOARM"_"$VERSION""$WIN_SUF" v2raya_"${{ steps.get_filename.outputs.BUILD_NAME }}"_"$VERSION""$WIN_SUF"
     - name: Upload Artifact
