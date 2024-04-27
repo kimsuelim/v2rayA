@@ -375,7 +375,7 @@ func checkUpdate() {
 	// 检查服务端更新
 	go func() {
 		f := func() {
-			if foundNew, remote, err := service.CheckUpdate(); err == nil {
+			if foundNew, remote, err := utils.CheckLatestUpdate(); err == nil {
 				conf.FoundNew = foundNew
 				conf.RemoteVersion = remote
 			}
