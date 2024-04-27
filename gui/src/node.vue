@@ -1,62 +1,62 @@
 <template>
   <section id="node-section" class="node-section container hero">
-    <b-sidebar
-      v-show="connectedServerInfo.length"
-      :open="true"
-      class="node-status-sidebar-reduced"
-      :can-cancel="false"
-      @mouseenter.native="showSidebar = true"
-      @click.native="showSidebar = true"
-    >
-      <img src="@/assets/img/switch-menu.svg" width="36px" />
-    </b-sidebar>
-    <b-sidebar
-      :open="showSidebar"
-      type="is-light"
-      :fullheight="false"
-      :fullwidth="false"
-      :overlay="false"
-      :right="false"
-      class="node-status-sidebar"
-      :can-cancel="['outside']"
-      @close="showSidebar = false"
-      @mouseleave.native="showSidebar = false"
-    >
-      <b-message
-        v-for="v of connectedServerInfo"
-        :key="v.value"
-        :title="`${v.info.name}${
-          v.info.subscription_name ? ` [${v.info.subscription_name}]` : ''
-        }`"
-        :closable="false"
-        size="is-small"
-        :type="
-          v.info.alive
-            ? v.selected
-              ? 'is-primary'
-              : 'is-success'
-            : v.info.alive === null
-            ? 'is-light'
-            : 'is-danger'
-        "
-        @click.native="handleClickConnectedServer(v.which)"
-      >
-        <div v-if="v.showContent">
-          <p>{{ $t("server.protocol") }}: {{ v.info.net }}</p>
-          <p v-if="v.info.delay && v.info.delay < 99999">
-            {{ $t("server.latency") }}: {{ v.info.delay }}ms
-          </p>
-          <p v-if="!v.info.alive && v.info.last_seen_time">
-            {{ $t("server.lastSeenTime") }}:
-            {{ v.info.last_seen_time | unix2datetime }}
-          </p>
-          <p v-if="v.info.last_try_time">
-            {{ $t("server.lastTryTime") }}:
-            {{ v.info.last_try_time | unix2datetime }}
-          </p>
-        </div>
-      </b-message>
-    </b-sidebar>
+<!--    <b-sidebar-->
+<!--      v-show="connectedServerInfo.length"-->
+<!--      :open="true"-->
+<!--      class="node-status-sidebar-reduced"-->
+<!--      :can-cancel="false"-->
+<!--      @mouseenter.native="showSidebar = true"-->
+<!--      @click.native="showSidebar = true"-->
+<!--    >-->
+<!--      <img src="@/assets/img/switch-menu.svg" width="36px" />-->
+<!--    </b-sidebar>-->
+<!--    <b-sidebar-->
+<!--      :open="showSidebar"-->
+<!--      type="is-light"-->
+<!--      :fullheight="false"-->
+<!--      :fullwidth="false"-->
+<!--      :overlay="false"-->
+<!--      :right="false"-->
+<!--      class="node-status-sidebar"-->
+<!--      :can-cancel="['outside']"-->
+<!--      @close="showSidebar = false"-->
+<!--      @mouseleave.native="showSidebar = false"-->
+<!--    >-->
+<!--      <b-message-->
+<!--        v-for="v of connectedServerInfo"-->
+<!--        :key="v.value"-->
+<!--        :title="`${v.info.name}${-->
+<!--          v.info.subscription_name ? ` [${v.info.subscription_name}]` : ''-->
+<!--        }`"-->
+<!--        :closable="false"-->
+<!--        size="is-small"-->
+<!--        :type="-->
+<!--          v.info.alive-->
+<!--            ? v.selected-->
+<!--              ? 'is-primary'-->
+<!--              : 'is-success'-->
+<!--            : v.info.alive === null-->
+<!--            ? 'is-light'-->
+<!--            : 'is-danger'-->
+<!--        "-->
+<!--        @click.native="handleClickConnectedServer(v.which)"-->
+<!--      >-->
+<!--        <div v-if="v.showContent">-->
+<!--          <p>{{ $t("server.protocol") }}: {{ v.info.net }}</p>-->
+<!--          <p v-if="v.info.delay && v.info.delay < 99999">-->
+<!--            {{ $t("server.latency") }}: {{ v.info.delay }}ms-->
+<!--          </p>-->
+<!--          <p v-if="!v.info.alive && v.info.last_seen_time">-->
+<!--            {{ $t("server.lastSeenTime") }}:-->
+<!--            {{ v.info.last_seen_time | unix2datetime }}-->
+<!--          </p>-->
+<!--          <p v-if="v.info.last_try_time">-->
+<!--            {{ $t("server.lastTryTime") }}:-->
+<!--            {{ v.info.last_try_time | unix2datetime }}-->
+<!--          </p>-->
+<!--        </div>-->
+<!--      </b-message>-->
+<!--    </b-sidebar>-->
     <div v-if="ready" class="hero-body">
       <b-field
         id="toolbar"
@@ -76,7 +76,7 @@
             :class="{
               button: true,
               field: true,
-              'is-info': true,
+              'is-info is-small is-outlined': true,
               'mobile-small': true,
               'not-display': !overHeight && !isCheckedRowsPingable(),
             }"
@@ -90,7 +90,7 @@
             :class="{
               button: true,
               field: true,
-              'is-info': true,
+              'is-info is-small is-outlined': true,
               'mobile-small': true,
               'not-display': !overHeight && !isCheckedRowsPingable(),
             }"
@@ -104,7 +104,7 @@
             :class="{
               button: true,
               field: true,
-              'is-delete': true,
+              'is-delete is-small is-outlined': true,
               'mobile-small': true,
               'not-display': !overHeight && !isCheckedRowsDeletable(),
             }"
@@ -128,24 +128,24 @@
           </button>
           <span class="field not-show mobile-small">placeholder</span>
         </div>
-        <div class="right">
-          <b-button
-            class="field mobile-small"
-            type="is-primary"
-            @click="handleClickCreate"
-          >
-            <i class="iconfont icon-chuangjiangongdan1" />
-            <span>{{ $t("operations.create") }}</span>
-          </b-button>
-          <b-button
-            class="field mobile-small"
-            type="is-primary"
-            @click="handleClickImport"
-          >
-            <i class="iconfont icon-daoruzupu-xianxing" />
-            <span>{{ $t("operations.import") }}</span>
-          </b-button>
-        </div>
+<!--        <div class="right">-->
+<!--          <b-button-->
+<!--            class="field mobile-small"-->
+<!--            type="is-primary"-->
+<!--            @click="handleClickCreate"-->
+<!--          >-->
+<!--            <i class="iconfont icon-chuangjiangongdan1" />-->
+<!--            <span>{{ $t("operations.create") }}</span>-->
+<!--          </b-button>-->
+<!--          <b-button-->
+<!--            class="field mobile-small"-->
+<!--            type="is-primary"-->
+<!--            @click="handleClickImport"-->
+<!--          >-->
+<!--            <i class="iconfont icon-daoruzupu-xianxing" />-->
+<!--            <span>{{ $t("operations.import") }}</span>-->
+<!--          </b-button>-->
+<!--        </div>-->
       </b-field>
 
       <b-collapse
@@ -212,7 +212,6 @@
                 v-slot="props"
                 field="id"
                 label="ID"
-                numeric
                 sortable
               >
                 {{ props.row.id }}
@@ -225,18 +224,18 @@
               >
                 {{ props.row.name }}
               </b-table-column>
-              <b-table-column
-                v-slot="props"
-                field="address"
-                :label="$t('server.address')"
-                sortable
-              >
-                <p 
-                  class="address-column" 
-                  :title="props.row.address">
-                  {{ props.row.address }}
-                </p>
-              </b-table-column>
+<!--              <b-table-column-->
+<!--                v-slot="props"-->
+<!--                field="address"-->
+<!--                :label="$t('server.address')"-->
+<!--                sortable-->
+<!--              >-->
+<!--                <p -->
+<!--                  class="address-column" -->
+<!--                  :title="props.row.address">-->
+<!--                  {{ props.row.address }}-->
+<!--                </p>-->
+<!--              </b-table-column>-->
               <b-table-column
                 v-slot="props"
                 field="net"
@@ -291,15 +290,15 @@
                         : $t("operations.connect")
                     }}
                   </b-button>
-                  <b-button
-                    size="is-small"
-                    icon-left=" github-circle iconfont icon-wendangxiugai"
-                    :outlined="!props.row.connected"
-                    type="is-info"
-                    @click="handleClickModifyServer(props.row)"
-                  >
-                    {{ $t("operations.modify") }}
-                  </b-button>
+<!--                  <b-button-->
+<!--                    size="is-small"-->
+<!--                    icon-left=" github-circle iconfont icon-wendangxiugai"-->
+<!--                    :outlined="!props.row.connected"-->
+<!--                    type="is-info"-->
+<!--                    @click="handleClickModifyServer(props.row)"-->
+<!--                  >-->
+<!--                    {{ $t("operations.modify") }}-->
+<!--                  </b-button>-->
                 </div>
               </b-table-column>
             </b-table>

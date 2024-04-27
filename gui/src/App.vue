@@ -3,22 +3,17 @@
     <b-navbar ref="navs" fixed-top shadow type="is-light">
       <template slot="brand">
         <b-navbar-item href="/">
-          <img
-            src="@/assets/img/logo2.png"
-            alt="v2rayA"
-            class="logo no-select"
-          />
+          <span class="label">Panda</span>
         </b-navbar-item>
         <b-navbar-item tag="div">
-          <b-tag
-            id="statusTag"
-            class="pointerTag"
-            :type="statusMap[runningState.running]"
-            @mouseenter.native="handleOnStatusMouseEnter"
-            @mouseleave.native="handleOnStatusMouseLeave"
-            @click.native="handleClickStatus"
-            >{{ coverStatusText ? coverStatusText : runningState.running }}
-          </b-tag>
+          <b-button
+              class="is-small is-rounded"
+              :type="statusMap[runningState.running]"
+              @mouseenter.native="handleOnStatusMouseEnter"
+              @mouseleave.native="handleOnStatusMouseLeave"
+              @click.native="handleClickStatus"
+          >{{ coverStatusText ? coverStatusText : runningState.running }}
+          </b-button>
         </b-navbar-item>
       </template>
       <template slot="start"></template>
@@ -32,10 +27,10 @@
           <i class="iconfont icon-setting" style="font-size: 1.25em"></i>
           {{ $t("common.setting") }}
         </b-navbar-item>
-        <b-navbar-item tag="a" @click.native="handleClickAbout">
-          <i class="iconfont icon-heart" style="font-size: 1.25em"></i>
-          {{ $t("common.about") }}
-        </b-navbar-item>
+<!--        <b-navbar-item tag="a" @click.native="handleClickAbout">-->
+<!--          <i class="iconfont icon-heart" style="font-size: 1.25em"></i>-->
+<!--          {{ $t("common.about") }}-->
+<!--        </b-navbar-item>-->
         <b-navbar-item tag="a" @click.native="handleClickLogs">
           <i class="iconfont icon-info" style="font-size: 1.25em"></i>
           {{ $t("common.log") }}
