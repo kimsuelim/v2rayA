@@ -128,7 +128,7 @@
           </button>
           <span class="field not-show mobile-small">placeholder</span>
         </div>
-<!--        <div class="right">-->
+        <div class="right">
 <!--          <b-button-->
 <!--            class="field mobile-small"-->
 <!--            type="is-primary"-->
@@ -137,15 +137,19 @@
 <!--            <i class="iconfont icon-chuangjiangongdan1" />-->
 <!--            <span>{{ $t("operations.create") }}</span>-->
 <!--          </b-button>-->
-<!--          <b-button-->
-<!--            class="field mobile-small"-->
-<!--            type="is-primary"-->
-<!--            @click="handleClickImport"-->
-<!--          >-->
-<!--            <i class="iconfont icon-daoruzupu-xianxing" />-->
-<!--            <span>{{ $t("operations.import") }}</span>-->
-<!--          </b-button>-->
-<!--        </div>-->
+          <button
+              :class="{
+              button: true,
+              field: true,
+              'is-info is-small is-outlined': true,
+              'mobile-small': true,
+            }"
+            @click="handleClickImport"
+          >
+            <i class="iconfont icon-daoruzupu-xianxing" />
+            <span>{{ $t("operations.import") }}</span>
+          </button>
+        </div>
       </b-field>
 
       <b-collapse
