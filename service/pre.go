@@ -39,6 +39,7 @@ import (
 
 	"github.com/v2rayA/v2rayA/cloud"
 	"github.com/v2rayA/v2rayA/cloud/utils"
+	"github.com/v2rayA/v2rayA/common"
 )
 
 func initSentry() {
@@ -190,18 +191,18 @@ func initConfigure() {
 			initDBValue()
 		}
 	} else {
-		// Migration for previous installed versions which without uuid.
-		u := configure.GetUUID()
-		if u == "" {
-			uu := configure.GetUUIDNotNil()
-			log.Warn("database was initialized, but the UUID field does not exist.")
-			log.Warn("uuid: %v", uu)
-
-			err := configure.SetUUID(uu)
+		// Migrate secrets
+		if !service.IsValidAccount(conf.AdminUsername, conf.AdminPassword) {
+			log.Warn("Account was changed. migrate secrets")
+			err := configure.ResetAccounts()
 			if err != nil {
-				log.Warn("%v", err)
 				return
 			}
+			err = configure.SetAccount(conf.AdminUsername, common.CryptoPwd(conf.AdminPassword))
+			if err != nil {
+				return
+			}
+			log.Warn("Migration is done")
 		}
 	}
 	//检查config.json是否存在
