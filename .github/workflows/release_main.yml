@@ -52,20 +52,7 @@ jobs:
   Build_v2rayA_Binaries:
     strategy:
       matrix:
-        goos: [ linux ]
-        goarch: [ amd64, arm64, 386, riscv64, mips64, mips64le, mipsle, mips, loong64 ]
         include:
-          # BEGIN Linux ARM 5 6 7
-          - goos: linux
-            goarch: arm
-            goarm: 7
-          - goos: linux
-            goarch: arm
-            goarm: 6
-          - goos: linux
-            goarch: arm
-            goarm: 5
-          # END Linux ARM 5 6 7
           # BEGIN Windows
           - goos: windows
             goarch: amd64
@@ -80,16 +67,6 @@ jobs:
           - goos: darwin
             goarch: arm64
           # END macOS
-          # BEGIN BSD
-          - goos: freebsd
-            goarch: amd64
-          - goos: freebsd
-            goarch: arm64
-          - goos: openbsd
-            goarch: amd64
-          - goos: openbsd
-            goarch: arm64
-          # END BSD
       fail-fast: false
     runs-on: ubuntu-22.04
     needs: [Build_v2rayA_Web]
@@ -255,144 +232,11 @@ jobs:
         path: |
           installer_windows_inno_x64_${{ steps.prep.outputs.VERSION }}.exe
           installer_windows_inno_arm64_${{ steps.prep.outputs.VERSION }}.exe
-  Build_Linux_Packages:
-    runs-on: ubuntu-22.04
-    needs: [Build_v2rayA_Binaries]
-    strategy:
-      matrix:
-        goos: [linux]
-        goarch: [amd64, arm64, 386, riscv64, mips64, mips64le, mipsle, mips, loong64]
-        include:
-          - goos: linux
-            goarch: arm
-            goarm: 7
-    env:
-      GOOS: ${{ matrix.goos }}
-      GOARCH: ${{ matrix.goarch }}
-      GOARM: ${{ matrix.goarm }}
-      CGO_ENABLED: 0
-      NAME: v2raya
-      DESC: "A web GUI client of Project V which supports VMess, VLESS, SS, SSR, Trojan, Tuic and Juicity protocols"
-    steps:
-    - uses: actions/checkout@v4.1.1
-      with:
-        fetch-depth: 0
-    - name: Get Friendly File Name
-      shell: pwsh
-      id: get_filename
-      run: |
-        $build_name = $(((Get-Content ./install/friendly-filenames.json | ConvertFrom-Json)."${{ matrix.goos }}-${{ matrix.goarch }}${{ matrix.goarm }}").friendlyName)
-        $friendly_arch = $((((Get-Content ./install/friendly-filenames.json | ConvertFrom-Json)."${{ matrix.goos }}-${{ matrix.goarch }}${{ matrix.goarm }}").friendlyName).Split('_')[1])
-        Write-Output "BUILD_NAME=$build_name" >> ${env:GITHUB_OUTPUT}
-        Write-Output "BUILD_NAME=$build_name" >> ${env:GITHUB_ENV}
-        Write-Output "FRIENDLY_ARCH=$friendly_arch" >> ${env:GITHUB_OUTPUT}
-        Write-Output "FRIENDLY_ARCH=$friendly_arch" >> ${env:GITHUB_ENV}
-    - name: Check Version
-      id: prep
-      env:
-        REF: ${{ github.ref }}
-      run: |
-        echo "P_DIR=$(pwd)" >> $GITHUB_OUTPUT
-        if [[ "$REF" == "refs/tags/v"* ]]; then
-          tag=$(git describe --tags $(git rev-list --tags --max-count=1))
-          version=${tag:1}
-          package_version="$(echo "$version" | awk -F 'v' '{print $1}')"
-        else
-          date=$(git log -1 --format="%cd" --date=short | sed s/-//g)
-          count=$(git rev-list --count HEAD)
-          commit=$(git rev-parse --short HEAD)
-          version="unstable-$date.r${count}.$commit"
-          package_version="$date.r${count}.$commit"
-        fi
-        echo "VERSION=$version" >> $GITHUB_OUTPUT
-        echo "VERSION=$version" >> $GITHUB_ENV
-        echo "PACKAGE_VERSION=$package_version" >> $GITHUB_OUTPUT
-        echo "PACKAGE_VERSION=$package_version" >> $GITHUB_ENV
-    - name: Download Artifact
-      uses: actions/download-artifact@v4.1.2
-      with:
-        name: v2raya_${{ steps.get_filename.outputs.BUILD_NAME }}_${{ steps.prep.outputs.VERSION }}
-        path: build/
-    - name: Download x64 Linux Build
-      uses: actions/download-artifact@v4.1.2
-      with:
-        name: v2raya_linux_x64_${{ steps.prep.outputs.VERSION }}
-        path: test/
-    - name: Show Artifacts
-      run: |
-        ls -l build/
-    - name: Build Packages
-      run: |
-        sudo gem install fpm -v 1.15.1
-        sudo apt-get install -y libarchive-tools rpm tar unzip
-        sudo chmod 755 ./test/v2raya_linux_x64_$VERSION
-        ./test/v2raya_linux_x64_$VERSION --report config | sed '1,6d' | fold -s -w 78 | sed -E 's/^([^#].+)/# \1/' >> install/universal/v2raya.default
-        if [ -n "$(echo $GOARCH | grep mips)" ]; then
-          packages="deb rpm"
-        else
-          packages="deb rpm pacman"
-        fi
-        sudo chmod 755 ./build/v2raya_${{ steps.get_filename.outputs.BUILD_NAME }}_${{ steps.prep.outputs.VERSION }}
-        for package_manager in $packages; do
-          if [ "$package_manager" == 'pacman' ];then
-            if [ "$GOARCH" == 'arm' ] && [ "$GOARM" == '7' ];then
-              package_arch='arm7hf'
-            elif [ "$GOARCH" == 'arm64' ];then
-              package_arch='aarch64'
-            else
-              package_arch="$GOARCH"
-            fi
-          elif [ "$package_manager" == 'rpm' ];then
-            if [ "$GOARCH" == 'arm' ] && [ "$GOARM" == '7' ];then
-              package_arch='armhfp'
-            elif [ "$GOARCH" == 'arm64' ];then
-              package_arch='aarch64'
-            elif [ "$GOARCH" == 'loong64' ];then
-              package_arch='loongson64'
-            else
-              package_arch="$GOARCH"
-            fi
-          elif [ "$package_manager" == 'deb' ];then
-            if [ "$GOARCH" == 'arm' ] && [ "$GOARM" == '7' ];then
-              package_arch='armhf'
-            elif [ "$GOARCH" == '386' ];then
-              package_arch='i386'
-            elif [ "$GOARCH" == 'mipsle' ];then
-              package_arch='mips32le'
-            else
-              package_arch="$GOARCH"
-            fi
-          fi
-            fpm -s dir -t "$package_manager" -a $package_arch --version "${{ steps.prep.outputs.PACKAGE_VERSION }}" \
-            --url 'https://github.com/v2rayA/v2rayA' --description "$DESC" \
-            --maintainer "v2raya@v2raya.org" --name v2raya --license 'AGPL' \
-            --package installer_linux_$GOARCH$GOAMD64$GOARM_${{ steps.prep.outputs.VERSION }}.$package_manager \
-            --after-install ./install/universal/after_install.sh \
-            --after-upgrade ./install/universal/after_upgrade.sh \
-            ./build/v2raya_${{ steps.get_filename.outputs.BUILD_NAME }}_${{ steps.prep.outputs.VERSION }}=/usr/bin/v2raya \
-            ./install/universal/v2raya.service=/usr/lib/systemd/system/v2raya.service \
-            ./install/universal/v2raya-lite.service=/usr/lib/systemd/user/v2raya-lite.service \
-            ./install/universal/v2raya.png=/usr/share/icons/hicolor/512x512/apps/v2raya.png \
-            ./install/universal/v2raya.desktop=/usr/share/applications/v2raya.desktop \
-            ./install/universal/v2raya.default=/etc/default/v2raya
-        done
-        mkdir fpm_packages
-        [ -f installer_linux_$GOARCH$GOAMD64$GOARM_${{ steps.prep.outputs.VERSION }}.pacman ] && \
-        mv installer_linux_$GOARCH$GOAMD64$GOARM_${{ steps.prep.outputs.VERSION }}.pacman \
-           fpm_packages/installer_archlinux_${{ steps.get_filename.outputs.FRIENDLY_ARCH }}_${{ steps.prep.outputs.VERSION }}.pkg.tar.zst
-        mv installer_linux_$GOARCH$GOAMD64$GOARM_${{ steps.prep.outputs.VERSION }}.rpm \
-           fpm_packages/installer_redhat_${{ steps.get_filename.outputs.FRIENDLY_ARCH }}_${{ steps.prep.outputs.VERSION }}.rpm
-        mv installer_linux_$GOARCH$GOAMD64$GOARM_${{ steps.prep.outputs.VERSION }}.deb \
-           fpm_packages/installer_debian_${{ steps.get_filename.outputs.FRIENDLY_ARCH }}_${{ steps.prep.outputs.VERSION }}.deb
-    - name: Upload Artifact
-      uses: nanoufo/action-upload-artifacts-and-release-assets@v2
-      with:
-        path: |
-          fpm_packages/*
+
   GitHub_Release:
     if: startsWith(github.ref, 'refs/tags/v')
     runs-on: ubuntu-22.04
-    needs: [Build_v2rayA_Binaries, Build_Windows_Installers, Build_Linux_Packages]
+    needs: [Build_v2rayA_Binaries, Build_Windows_Installers]
     steps:
     - uses: actions/checkout@v4.1.1
       with:
@@ -441,15 +285,3 @@ jobs:
           gh release create "v${{ steps.prep.outputs.VERSION }}" -t "v${{ steps.prep.outputs.VERSION }}" --generate-notes
         fi
         gh release upload "v${{ steps.prep.outputs.VERSION }}" release/*
-    - name: Refresh Cloudflare Cache
-      env:
-        CF_AUTH_EMAIL: ${{ secrets.CF_AUTH_EMAIL }}
-        CF_PARGE_CACHE_AUTH_KEY: ${{ secrets.CF_PARGE_CACHE_AUTH_KEY }}
-        CF_ZONE: ${{ secrets.CF_ZONE }}
-      shell: bash
-      run: |
-        curl -X POST "https://api.cloudflare.com/client/v4/zones/$CF_ZONE/purge_cache" \
-          -H "X-Auth-Email: $CF_AUTH_EMAIL" \
-          -H "Authorization: Bearer $CF_PARGE_CACHE_AUTH_KEY" \
-          -H "Content-Type: application/json" \
-          --data '{"purge_everything":true}'
