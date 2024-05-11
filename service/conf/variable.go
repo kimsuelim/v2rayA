@@ -5,8 +5,6 @@ import (
 )
 
 var (
-	BasicAuthUsername        = "my_username"
-	BasicAuthPassword        = "my_password"
 	AdminUsername            = "admin@admin"
 	AdminPassword            = "admin"
 	ApiHost                  = "http://host.docker.internal:3000"

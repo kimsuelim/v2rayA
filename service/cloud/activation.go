@@ -5,12 +5,12 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"github.com/v2rayA/v2rayA/common/httpClient"
-	"github.com/v2rayA/v2rayA/conf"
-	"github.com/v2rayA/v2rayA/db/configure"
-	"github.com/v2rayA/v2rayA/pkg/util/log"
 	"io"
 	"net/http"
+
+	"github.com/v2rayA/v2rayA/common/httpClient"
+	"github.com/v2rayA/v2rayA/db/configure"
+	"github.com/v2rayA/v2rayA/pkg/util/log"
 )
 
 func ActivateDevice() (data string, err error) {
@@ -47,7 +47,7 @@ func httpPost(url string, body []byte) (data string, err error) {
 	client := httpClient.GetHttpClientAutomatically()
 	req, err := http.NewRequest(http.MethodPost, url, bytes.NewBuffer(body))
 	req.Header.Set("Content-Type", "application/json")
-	req.SetBasicAuth(conf.BasicAuthUsername, conf.BasicAuthPassword)
+	req.Header.Add("Authorization", "Bearer "+configure.GetAccessToken())
 
 	resp, err := client.Do(req)
 	if err != nil {
@@ -73,7 +73,7 @@ func httpPost(url string, body []byte) (data string, err error) {
 func httpGet(url string) (data string, err error) {
 	client := httpClient.GetHttpClientAutomatically()
 	req, err := http.NewRequest(http.MethodGet, url, http.NoBody)
-	req.SetBasicAuth(conf.BasicAuthUsername, conf.BasicAuthPassword)
+	req.Header.Add("Authorization", "Bearer "+configure.GetAccessToken())
 
 	resp, err := client.Do(req)
 	if err != nil {

@@ -4,6 +4,10 @@ import (
 	"bytes"
 	"encoding/hex"
 	"fmt"
+	"sort"
+	"strings"
+	"time"
+
 	"github.com/google/uuid"
 	jsoniter "github.com/json-iterator/go"
 	"github.com/tidwall/gjson"
@@ -11,9 +15,6 @@ import (
 	"github.com/v2rayA/v2rayA/conf"
 	"github.com/v2rayA/v2rayA/db"
 	"github.com/v2rayA/v2rayA/pkg/util/log"
-	"sort"
-	"strings"
-	"time"
 )
 
 type Configure struct {
@@ -27,6 +28,7 @@ type Configure struct {
 	ExternalDnsList  *string            `json:"externalDnsList"`
 	RoutingA         *string            `json:"routingA"`
 	UUID             string             `json:"uuid"`
+	AccessToken      string             `json:"accessToken"`
 }
 
 func New() *Configure {
@@ -49,6 +51,7 @@ func New() *Configure {
 		ExternalDnsList: nil,
 		RoutingA:        nil,
 		UUID:            uuid.NewString(),
+		AccessToken:     "",
 	}
 }
 func decode(b []byte) (result []byte) {
@@ -155,6 +158,10 @@ func SetUUID(uuid string) (err error) {
 	return db.Set("system", "uuid", uuid)
 }
 
+func SetAccessToken(token string) (err error) {
+	return db.Set("system", "accessToken", token)
+}
+
 func AppendServers(server []*ServerRaw) (err error) {
 	return db.ListAppend("touch", "servers", server)
 }
@@ -250,6 +257,11 @@ func GetUUIDNotNil() (u string) {
 	}
 	return
 }
+func GetAccessToken() (u string) {
+	_ = db.Get("system", "accessToken", &u)
+	return
+}
+
 func GetExternalDnsListNotNil() (list []string) {
 	r := new(string)
 	_ = db.Get("system", "externalDnsList", r)

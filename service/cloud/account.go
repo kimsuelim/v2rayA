@@ -3,24 +3,34 @@ package cloud
 import (
 	"encoding/json"
 	"fmt"
+	"time"
+
+	"github.com/v2rayA/v2rayA/db/configure"
 	"github.com/v2rayA/v2rayA/pkg/server/jwt"
 	"github.com/v2rayA/v2rayA/pkg/util/log"
-	"time"
 )
 
+type LoginResponseDto struct {
+	Token     string `json:"token"`
+	ExpiresAt string `json:"expiredAt"`
+}
+
 func Login(username, password string) (token string, err error) {
-	if !IsValidAccount(username, password) {
+	valid, token := IsValidAccount(username, password)
+	if !valid {
 		return "", fmt.Errorf("wrong username or password")
 	}
+
+	configure.SetAccessToken(token)
+
 	dur := 30 * 24 * time.Hour
 	return jwt.MakeJWT(map[string]string{
 		"uname": username,
 	}, &dur)
 }
 
-func IsValidAccount(username, password string) bool {
+func IsValidAccount(username, password string) (bool, string) {
 	var user = map[string]interface{}{
-		"name":     username,
 		"email":    username,
 		"password": password,
 	}
@@ -28,17 +38,21 @@ func IsValidAccount(username, password string) bool {
 	var url = GetApiHost() + "/login"
 	reqBody, err := json.Marshal(user)
 	if err != nil {
-		return false
+		return false, ""
 	}
 
 	resp, err := httpPost(url, reqBody)
 	if err != nil {
 		err = fmt.Errorf("%w: %v", FailCreate, err)
 		log.Warn("IsValidAccount: %v", err)
-		return false
+		return false, ""
 	}
 
-	log.Info("IsValidAccount: %v -> SUCCESS", resp)
+	loginDto := LoginResponseDto{}
+	err = json.Unmarshal([]byte(resp), &loginDto)
+	if err != nil {
+		return false, ""
+	}
 
-	return true
+	return true, loginDto.Token
 }

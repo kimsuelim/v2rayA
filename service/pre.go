@@ -261,7 +261,10 @@ func hello() {
 	log.Alert("Arch: %v", runtime.GOARCH)
 	log.Alert("Lite: %v", conf.GetEnvironmentConfig().Lite)
 	log.Alert("Version: %v", conf.Version)
-	log.Alert("UUID: %v", configure.GetUUID())
+	if conf.IsDebug() {
+		log.Alert("UUID: %v", configure.GetUUID())
+		log.Alert("AccessToken: %v", configure.GetAccessToken())
+	}
 	log.Alert("NetworkInfo: %v", cloud.GetListOfIPv4Interfaces())
 	log.Alert("SoftwareInfo: %v", cloud.GetSoftwareInfo())
 	log.Alert("Starting...")
