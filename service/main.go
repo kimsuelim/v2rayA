@@ -28,7 +28,7 @@ func main() {
 	checkUpdate()
 	initSentry() // order of initialization is matter
 	hello()
-	checkDevice()
+	manageDevice()
 	updateServers()
 	if err := run(); err != nil {
 		log.Fatal("main: %v", err)

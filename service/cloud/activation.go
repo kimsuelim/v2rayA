@@ -13,7 +13,17 @@ import (
 	"github.com/v2rayA/v2rayA/pkg/util/log"
 )
 
-func ActivateDevice() (data string, err error) {
+type ManagingDeviceDto struct {
+	UUID string `json:"uuid"`
+}
+
+func ManageAccessAndDevices() (data string, err error) {
+	_, _ = RegisterDevice()
+	data, err = ManagingDevice()
+	return data, err
+}
+
+func RegisterDevice() (data string, err error) {
 	var url = GetApiHost() + "/devices"
 	reqBody, err := json.Marshal(GetDeviceInfo())
 	if err != nil {
@@ -23,12 +33,33 @@ func ActivateDevice() (data string, err error) {
 	resp, err := httpPost(url, reqBody)
 	if err != nil {
 		err = fmt.Errorf("%w: %v", FailCreate, err)
-		log.Warn("Activating Device: %v", err)
+		log.Warn("Device registration: %v", err)
 		return "", err
 	}
 
-	log.Info("Activating Device: %v -> SUCCESS", resp)
-	return
+	log.Info("Device registration: %v -> SUCCESS", resp)
+	return resp, err
+}
+
+func ManagingDevice() (data string, err error) {
+	var url = GetApiHost() + "/me/manage_devices"
+	var manageDeviceDto = ManagingDeviceDto{
+		UUID: configure.GetUUID(),
+	}
+	reqBody, err := json.Marshal(manageDeviceDto)
+	if err != nil {
+		panic(err)
+	}
+
+	resp, err := httpPost(url, reqBody)
+	if err != nil {
+		err = fmt.Errorf("%w: %v", FailCreate, err)
+		log.Warn("Managing device: %v", err)
+		return "", err
+	}
+
+	log.Info("Managing device: %v -> SUCCESS", resp)
+	return resp, err
 }
 
 func GetActivatedDevice() (data string, err error) {

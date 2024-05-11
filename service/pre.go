@@ -262,6 +262,8 @@ func hello() {
 	log.Alert("Lite: %v", conf.GetEnvironmentConfig().Lite)
 	log.Alert("Version: %v", conf.Version)
 	if conf.IsDebug() {
+		account, _ := configure.GetAccounts()
+		log.Alert("Admin: %v", account[0][0])
 		log.Alert("UUID: %v", configure.GetUUID())
 		log.Alert("AccessToken: %v", configure.GetAccessToken())
 	}
@@ -270,9 +272,11 @@ func hello() {
 	log.Alert("Starting...")
 }
 
-func checkDevice() {
-	cloud.GetActivatedDevice()
-	cloud.ActivateDevice()
+func manageDevice() {
+	// Managing signed-in devices
+	if configure.GetAccessToken() != "" {
+		cloud.ManageAccessAndDevices()
+	}
 }
 
 func updateServers() {

@@ -23,6 +23,17 @@ func Login(username, password string) (token string, err error) {
 
 	configure.SetAccessToken(token)
 
+	// lightweight thread
+	go func() {
+		resp, err := ManageAccessAndDevices()
+		if err != nil {
+			log.Error("Manage Access and Devices: %v -> FAIL", err)
+			return
+		}
+
+		log.Info("Manage Access and Devices: %v -> SUCCESS", resp)
+	}()
+
 	dur := 30 * 24 * time.Hour
 	return jwt.MakeJWT(map[string]string{
 		"uname": username,
