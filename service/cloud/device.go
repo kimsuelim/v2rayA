@@ -10,6 +10,7 @@ import (
 
 type DeviceInfo struct {
 	UUID         string        `json:"uuid"`
+	HostInfo     HostInfo      `json:"hostInfo"`
 	NetworkInfo  []NetworkInfo `json:"networkInfo"`
 	SoftwareInfo SoftwareInfo  `json:"softwareInfo"`
 }
@@ -21,6 +22,7 @@ type ManagingDeviceDto struct {
 func GetDeviceInfo() DeviceInfo {
 	deviceInfo := DeviceInfo{
 		UUID:         configure.GetUUID(),
+		HostInfo:     GetHostInfo(),
 		NetworkInfo:  GetListOfIPv4Interfaces(),
 		SoftwareInfo: GetSoftwareInfo(),
 	}

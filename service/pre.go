@@ -269,6 +269,7 @@ func hello() {
 	}
 	log.Alert("NetworkInfo: %v", cloud.GetListOfIPv4Interfaces())
 	log.Alert("SoftwareInfo: %v", cloud.GetSoftwareInfo())
+	log.Alert("HostInfo: %v", cloud.GetHostInfo())
 	log.Alert("Starting...")
 }
 
