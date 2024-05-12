@@ -273,10 +273,12 @@ func hello() {
 }
 
 func manageDevice() {
-	// Managing signed-in devices
-	if configure.GetAccessToken() != "" {
-		cloud.ManageAccessAndDevices()
+	if configure.GetAccessToken() == "" {
+		return
 	}
+
+	// Managing signed-in devices
+	cloud.ManageAccessAndDevices()
 }
 
 func updateServers() {
@@ -284,21 +286,29 @@ func updateServers() {
 	var TickerUpdateServerList = time.NewTicker(cloud.TickDuration())
 	go func() {
 		for range TickerUpdateServerList.C {
+			if configure.GetAccessToken() == "" {
+				continue
+			}
+
 			err := cloud.SyncServerWithCloud()
 			if err != nil {
-				log.Info("[AutoUpdate] ServerList: %v", err)
+				log.Error("[SyncServers] updating server list: %v -> FAIL", err)
 			}
 		}
 	}()
 
 	// When service start
 	go func() {
-		err := cloud.SyncServerWithCloud()
-		if err != nil {
-			log.Info("[updateServers] ServerList: %v", err)
+		if configure.GetAccessToken() == "" {
 			return
 		}
-		log.Info("Complete updating server list. Localtime: %v", "")
+
+		err := cloud.SyncServerWithCloud()
+		if err != nil {
+			log.Error("[SyncServers] updating server list: %v -> FAIL", err)
+			return
+		}
+		log.Info("[SyncServers] Complete updating server list: -> SUCCESS")
 	}()
 }
 

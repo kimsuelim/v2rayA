@@ -3,6 +3,7 @@ package cloud
 import (
 	"encoding/json"
 	"fmt"
+
 	"github.com/v2rayA/v2rayA/core/serverObj"
 	"github.com/v2rayA/v2rayA/db/configure"
 	"github.com/v2rayA/v2rayA/pkg/util/log"
@@ -97,7 +98,7 @@ func SyncServerWithCloud() (err error) {
 }
 
 func GetServerFromCloud() (data string, err error) {
-	var url = GetApiHost() + "/servers"
+	var url = GetApiHost() + "/me/servers"
 	resp, err := httpGet(url)
 	if err != nil {
 		err = fmt.Errorf("%w: %v", FailGet, err)

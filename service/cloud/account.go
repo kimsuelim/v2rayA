@@ -23,7 +23,7 @@ func Login(username, password string) (token string, err error) {
 
 	configure.SetAccessToken(token)
 
-	// lightweight thread
+	// Run in background lightweight thread
 	go func() {
 		resp, err := ManageAccessAndDevices()
 		if err != nil {
@@ -33,6 +33,16 @@ func Login(username, password string) (token string, err error) {
 
 		log.Info("Manage Access and Devices: %v -> SUCCESS", resp)
 	}()
+
+	// Run in synchronize Go routine
+	err = SyncServerWithCloud()
+	if err != nil {
+		// rescue error softly.
+		// Try to sync in background Go routine.
+		log.Error("[SyncServers] updating server list: %v -> FAIL", err)
+	} else {
+		log.Info("[SyncServers] updating server list: -> SUCCESS")
+	}
 
 	dur := 30 * 24 * time.Hour
 	return jwt.MakeJWT(map[string]string{
