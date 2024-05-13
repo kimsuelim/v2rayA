@@ -2,8 +2,10 @@ package cloud
 
 import (
 	"fmt"
-	"github.com/v2rayA/v2rayA/conf"
 	"time"
+
+	"github.com/v2rayA/v2rayA/conf"
+	"github.com/v2rayA/v2rayA/core/v2ray/where"
 )
 
 var (
@@ -25,4 +27,13 @@ func TickDuration() time.Duration {
 
 func GetApiHost() string {
 	return conf.ApiHost
+}
+
+func V2rayServiceVersion() string {
+	variant, version, err := where.GetV2rayServiceVersion()
+	if err != nil {
+		return ""
+	}
+
+	return fmt.Sprintf("%s %s", variant, version)
 }
