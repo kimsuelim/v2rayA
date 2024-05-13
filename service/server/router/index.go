@@ -4,6 +4,14 @@ import (
 	"crypto/md5"
 	"embed"
 	"fmt"
+	"io"
+	"io/fs"
+	"net"
+	"net/http"
+	"os"
+	"path/filepath"
+	"strings"
+
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"github.com/v2rayA/v2rayA/common"
@@ -14,13 +22,6 @@ import (
 	"github.com/v2rayA/v2rayA/pkg/util/log"
 	"github.com/v2rayA/v2rayA/server/controller"
 	"github.com/vearutop/statigz"
-	"io"
-	"io/fs"
-	"net"
-	"net/http"
-	"os"
-	"path/filepath"
-	"strings"
 )
 
 //go:embed web
@@ -147,7 +148,7 @@ func Run() error {
 	{
 		noAuth.GET("version", controller.GetVersion)
 		noAuth.POST("login", controller.PostLogin)
-		noAuth.POST("account", controller.PostAccount)
+		// noAuth.POST("account", controller.PostAccount)
 	}
 	auth := engine.Group("api",
 		nocache,
