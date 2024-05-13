@@ -1,13 +1,12 @@
 package touch
 
 import (
+	"net/url"
+	"time"
+
 	jsoniter "github.com/json-iterator/go"
 	"github.com/v2rayA/v2rayA/db/configure"
 	"github.com/v2rayA/v2rayA/pkg/util/log"
-	"net"
-	"net/url"
-	"strconv"
-	"time"
 )
 
 /*
@@ -46,16 +45,16 @@ func NewUpdateStatus() SubscriptionStatus {
 func serverRawsToServers(rss []configure.ServerRaw) (ts []Server) {
 	ts = make([]Server, len(rss))
 	for i, v := range rss {
-		var address string
-		if v.ServerObj.GetPort() == 0 {
-			address = v.ServerObj.GetHostname()
-		} else {
-			address = net.JoinHostPort(v.ServerObj.GetHostname(), strconv.Itoa(v.ServerObj.GetPort()))
-		}
+		// var address string
+		// if v.ServerObj.GetPort() == 0 {
+		// 	address = v.ServerObj.GetHostname()
+		// } else {
+		// 	address = net.JoinHostPort(v.ServerObj.GetHostname(), strconv.Itoa(v.ServerObj.GetPort()))
+		// }
 		ts[i] = Server{
-			ID:          i + 1,
-			Name:        v.ServerObj.GetName(),
-			Address:     address,
+			ID:   i + 1,
+			Name: v.ServerObj.GetName(),
+			// Address:     address,
 			Net:         v.ServerObj.ProtoToShow(),
 			PingLatency: v.Latency,
 		}
